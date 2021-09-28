@@ -72,7 +72,63 @@ public class TelaUsers extends javax.swing.JInternalFrame {
         }
     }
     
-    
+     private void alterar(){
+        String sql = "UPDATE usuarios set usuario=?, fone=?, login=?, senha=?, perfil=? WHERE iduser=?";
+        
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtNome.getText());
+            pst.setString(2, txtFone.getText());
+            pst.setString(3, txtLogin.getText());
+            String senha = new String(txtSenha.getPassword());
+            pst.setString(4, senha);
+            pst.setString(5, comboPerfil.getSelectedItem().toString());
+            pst.setString(6, txtID.getText());
+            
+            if (txtID.getText().isEmpty() || txtNome.getText().isEmpty() || 
+                    txtFone.getText().isEmpty() || txtLogin.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos");
+                
+            } else {
+            
+            int resultado = pst.executeUpdate();
+            if (resultado==1){
+                JOptionPane.showMessageDialog(null, "Usuário alterado com sucesso");
+                txtID.setText(null);
+                txtNome.setText(null);
+                txtFone.setText(null);
+                txtLogin.setText(null);
+                txtSenha.setText(null);
+            }
+            }  
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+     
+    private void remover(){
+        int confirma = JOptionPane.showConfirmDialog(null, "Tem certeza de que deseja remover este usuário?",
+                "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION){
+            String sql = "DELETE FROM usuarios WHERE iduser=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtID.getText());
+                int apagado = pst.executeUpdate();
+                if (apagado > 0){
+                    JOptionPane.showMessageDialog(null, "Usuário removido com sucesso!");
+                    txtID.setText(null);
+                    txtNome.setText(null);
+                    txtFone.setText(null);
+                    txtLogin.setText(null);
+                    txtSenha.setText(null);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
+     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -139,6 +195,11 @@ public class TelaUsers extends javax.swing.JInternalFrame {
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/hypelab/icones/delete.png"))); // NOI18N
         btnDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         btnDelete.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/hypelab/icones/read.png"))); // NOI18N
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
@@ -152,6 +213,11 @@ public class TelaUsers extends javax.swing.JInternalFrame {
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/hypelab/icones/update.png"))); // NOI18N
         btnAlterar.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         btnAlterar.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -244,6 +310,14 @@ public class TelaUsers extends javax.swing.JInternalFrame {
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         adicionar();
     }//GEN-LAST:event_btnAdicionarActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        alterar();
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        remover();
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
